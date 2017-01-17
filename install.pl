@@ -60,6 +60,8 @@ print "INFO: Installing gvim ...\n";
 system "apt-get --assume-yes install vim-gtk";
     
 # programs to install added later
+print "INFO: Installing shutter for abcde ...\n";
+system "apt-get --assume-yes install shutter";
 print "INFO: Installing terminator for abcde ...\n";
 system "apt-get --assume-yes install terminator";
 print "INFO: Installing eyed3 for abcde ...\n";
@@ -196,6 +198,47 @@ system "chmod 644 $emacs/php-mode.el";
 
 system "cp -v ./install/zenburn-theme.el $emacs";
 system "chmod 644 $emacs/zenburn-theme.el";
+
+# Copying items to Desktop
+system "cp -v /usr/share/applications/Emacs.desktop /home/$homename/Desktop/";
+system "chown $homename:$homename /home/$homename/Desktop/Emacs.desktop";
+system "chmod 755 /home/$homename/Desktop/Emacs.desktop";
+
+system "cp -v /usr/share/applications/Firefox.desktop /home/$homename/Desktop/";
+system "chown $homename:$homename /home/$homename/Desktop/Firefox.desktop";
+system "chmod 755 /home/$homename/Desktop/Firefox.desktop";
+
+system "cp -v /usr/share/applications/gftp.desktop /home/$homename/Desktop/";
+system "chown $homename:$homename /home/$homename/Desktop/gftp.desktop";
+system "chmod 755 /home/$homename/Desktop/gftp.desktop";
+
+system "cp -v /usr/share/applications/gpodder.desktop /home/$homename/Desktop/";
+system "chown $homename:$homename /home/$homename/Desktop/gpodder.desktop";
+system "chmod 755 /home/$homename/Desktop/gpodder.desktop";
+
+system "cp -v /usr/share/applications/gthumb.desktop /home/$homename/Desktop/";
+system "chown $homename:$homename /home/$homename/Desktop/gthumb.desktop";
+system "chmod 755 /home/$homename/Desktop/gthumb.desktop";
+
+system "cp -v /usr/share/applications/gvim.desktop /home/$homename/Desktop/";
+system "chown $homename:$homename /home/$homename/Desktop/gvim.desktop";
+system "chmod 755 /home/$homename/Desktop/gvim.desktop";
+
+system "cp -v /usr/share/applications/nautilus.desktop /home/$homename/Desktop/";
+system "chown $homename:$homename /home/$homename/Desktop/nautilus.desktop";
+system "chmod 755 /home/$homename/Desktop/nautilus.desktop";
+
+system "cp -v /usr/share/applications/shutter.desktop /home/$homename/Desktop/";
+system "chown $homename:$homename /home/$homename/Desktop/shutter.desktop";
+system "chmod 755 /home/$homename/Desktop/shutter.desktop";
+
+system "cp -v /usr/share/applications/terminator.desktop /home/$homename/Desktop/";
+system "chown $homename:$homename /home/$homename/Desktop/terminator.desktop";
+system "chmod 755 /home/$homename/Desktop/terminator.desktop";
+
+system "cp -v /usr/share/applications/xournal.desktop /home/$homename/Desktop/";
+system "chown $homename:$homename /home/$homename/Desktop/xournal.desktop";
+system "chmod 755 /home/$homename/Desktop/xournal.desktop";
 
 # installing vim modules
 print "TODO: You must run :PluginInstall in gvim manually (start gvim by pressing Alt-F2 and\n";
