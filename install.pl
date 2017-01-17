@@ -60,6 +60,8 @@ print "INFO: Installing gvim ...\n";
 system "apt-get --assume-yes install vim-gtk";
     
 # programs to install added later
+print "INFO: Installing xsel for abcde ...\n";
+system "apt-get --assume-yes install xsel";
 print "INFO: Installing shutter for abcde ...\n";
 system "apt-get --assume-yes install shutter";
 print "INFO: Installing terminator for abcde ...\n";
