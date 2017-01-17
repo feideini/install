@@ -1,0 +1,983 @@
+;; The next few lines need to be customized for new emacs installations
+
+;; (setq default-directory "S:/stefan-2014/literatur/hypomnemata/")
+(setq default-directory "/media/stefan/134578d5-ab2b-42d7-acee-ef4be0a6852c/barney/literatur/hypomnemata/")
+
+
+;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/color-theme-6.6.0")
+
+;; RECENTF
+(require 'recentf)
+(recentf-mode 1)
+(setq recentf-max-menu-items 25)
+(global-set-key "\C-x\ \C-r" 'recentf-open-files)
+(run-at-time nil (* 5 60) 'recentf-save-list)
+
+;; ORG-MODE
+;; The following lines are always needed. Choose your own keys.
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
+(setq org-cycle-include-plain-lists t)
+;; for all buffers
+(global-font-lock-mode t)
+;; org buffers only
+(add-hook 'org-mode-hook 'turn-on-font-lock)
+;; (transient-mark-mode 1)
+
+;; ESS
+(require 'ess-site)
+
+;; KEY-CHORD
+(require 'key-chord)
+(key-chord-mode 1)
+
+(key-chord-define-global "jk" 'dabbrev-expand)
+
+;; insert an equation in LaTeX
+(fset 'inseq
+   [?\C-c ?\C-e ?e ?q ?u ?a ?t ?i ?o ?n return f4 return ?\C-x ?r ?m ?y ?y ?t ?t return ?\C-a ?\C-j ?\C-j ?\C-o ?\C-k ?\C-k ?\C-x ?r ?b ?y ?y ?t ?t return])
+(key-chord-define-global "qw" 'inseq)
+
+(fset 'degree
+   "^{\\circ}")
+(key-chord-define-global "dg" 'degree)
+
+;; (key-chord-define-global "qw" 'stefan-insert-double-quotes)
+;; (key-chord-define-global "sd" 'stefan-increase-by-one-zero-padded)
+;; (key-chord-define-global "sf" 'isearch-forward-regexp)
+;; (key-chord-define-global "yu" 'stefan-yank-repeatedly)
+
+;; PHP-MODE
+(require 'php-mode)
+
+;; AUCTEX
+(load "auctex.el" nil t t)
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+
+;; CSV-MODE
+;; for centaur csv mode download el file at http://www.emacswiki.org/emacs/download/csv-mode.el
+(add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
+(autoload 'csv-mode "csv-mode"
+  "Major mode for editing comma-separated value files." t)
+
+;; OCTAVE
+(autoload 'octave-mode "octave-mod" nil t)
+(setq auto-mode-alist
+      (cons '("\\.m$" . octave-mode) auto-mode-alist))
+(add-hook 'octave-mode-hook
+          (lambda ()
+            (abbrev-mode 1)
+            (auto-fill-mode 1)
+            (if (eq window-system 'x)
+                (font-lock-mode 1))))
+
+;; GRAPHVIZ
+;; (load-file "/usr/share/emacs/23.3/site-lisp/graphviz-dot-mode.el")
+
+;; do not write macros for f7 and f8 - they are reserved for on-the-fly macros
+;; (global-set-key [f7] 't1)
+;; (global-set-key [f8] 't2)
+
+;; ASYMPTOTE
+(autoload 'asy-mode "asy-mode.el" "Asymptote major mode." t)
+(autoload 'lasy-mode "asy-mode.el" "hybrid Asymptote/Latex major mode." t)
+(autoload 'asy-insinuate-latex "asy-mode.el" "Asymptote insinuate LaTeX." t)
+(add-to-list 'auto-mode-alist '("\\.asy$" . asy-mode))
+
+;; SAGE
+;; After installation of the spkg, you must add something like the
+;; following to your .emacs:
+(add-to-list 'load-path "/home/stefan/ProgramFiles/sage-6.9-x86_64-Linux/local/share/emacs/site-lisp/sage-mode")
+(require 'sage "sage")
+(setq sage-command "/home/stefan/ProgramFiles/sage-6.9-x86_64-Linux/sage")
+;; If you want sage-view to typeset all your output and display plot()
+;; commands inline, uncomment the following line and configure sage-view:
+;; (add-hook 'sage-startup-after-prompt-hook 'sage-view)
+;; In particular customize the variable sage-view-default-commands.
+;; Using sage-view to typeset output requires a working LaTeX
+;; installation with the preview package.
+;; Also consider running (customize-group 'sage) to see more options.
+
+;; FOLDING
+;; see http://www.emacswiki.org/emacs/FoldingMode
+(load "folding" 'nomessage 'noerror)
+  (folding-mode-add-find-file-hook)
+
+;; GLOBALS
+;; VI-TYPE MOVEMENT
+(global-set-key "\C-k" 'previous-line)
+(global-set-key "\C-j" 'next-line)
+(global-set-key "\C-h" 'backward-char)
+(global-set-key "\C-l" 'forward-char)
+(global-set-key "\C-n" 'newline-and-indent)
+(global-set-key "\C-b" 'help-command)
+(global-set-key "\C-f" 'kill-line)
+(global-set-key "\M-h" 'backward-word)
+(global-set-key "\M-b" 'mark-paragraph)
+(global-set-key "\M-l" 'forward-word)
+(global-set-key "\M-k" 'downcase-word)
+(global-set-key "\M-f" 'kill-sentence)
+(global-set-key "\M-g" 'goto-line)
+
+;; GLOBAL DEFUNS
+(defun stefan-insert-LaTeX-dollarsigns () ;; written 2013-04-02
+  "Insert dollarsigns in LaTeX for math content. Bound to F6."
+  (interactive)
+  (insert "$$")
+  (backward-char 1))
+(global-set-key [f6] 'stefan-insert-LaTeX-dollarsigns)
+
+(defun match-paren (arg)
+      "Go to the matching paren if on a paren; otherwise insert %."
+      (interactive "p")
+      (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
+            ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
+            (t (self-insert-command (or arg 1)))))
+
+;; OTHERS
+(fset 'scrollbyone
+   "\C-j\C-u1\C-v")
+(global-set-key [f4] 'scrollbyone)
+
+; this key change makes scrolling in another window go line by line:
+(fset 'scroll-line-by-line
+   "\C-u1\C-[xscroll-other-window\C-m")
+(global-set-key "\C-\M-v" 'scroll-line-by-line)
+
+;; the recenter command so that there is more on the bottom than on the top
+(fset 'center-up
+   "\C-[xrecenter\C-m\C-[8\C-v")
+(global-set-key "\C-p" 'center-up)
+
+;; The macro germanize (C-x C-g) will save the buffer and
+
+;; germanize text above point
+(fset 'germanize
+   "\C-x\C-s\C-xrmthis\C-m\C-@\C-[<\C-[xiso german\C-m\C-xrbthis\C-m")
+
+;; (global-set-key "\C-x\C-g" 'germanize)
+
+;; make call-last-kbd-macro a one key command
+(global-set-key [f5] 'call-last-kbd-macro)
+(fset 'comment
+   [?\M-x ?c ?o ?m ?m ?e ?n ?t ?- ?r ?e ?g ?i ?o ?n return])
+(fset 'uncomment
+   [?\M-x ?u ?n ?c ?o ?m ?m ?e ?n ?t ?  ?r ?e ?g ?i ?o ?n return])
+(global-set-key [f9] 'comment)
+(global-set-key [f10] 'uncomment)
+
+;; STEFAN'S GENERAL SETTINGS
+;; various
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+(setq inhibit-startup-message t)
+;(set-foreground-color "dark orange")
+;(set-background-color "black")
+
+;; (require 'color-theme)
+;;     (color-theme-initialize)
+    ;; (color-theme-robin-hood)
+    ;; (color-theme-charcoal-black)
+    (load-file "/usr/share/emacs24/site-lisp/zenburn-theme.el")
+
+;; (require 'color-theme)
+;; (setq color-theme-is-global t)
+;; (color-theme-robin-hood)
+
+;; (set-cursor-color "dark orange")
+(fset 'yes-or-no-p 'y-or-n-p)
+(setq scroll-step 1)
+(setq sentence-end "[.?!][]\"')]*\\($\\|\t\\| \\)[ \t\n]*")
+(setq sentence-end-double-space nil)
+(mouse-avoidance-mode 'banish)
+;; (read-abbrev-file "~/.abbrev_defs")
+(setq-default abbrev-mode t)
+(setq save-abbrevs t)
+
+;; Text-based modes (including mail, TeX, and LaTeX modes) are auto-filled.
+;; this conflicts with visual-line-mode
+(add-hook 'text-mode-hook (function turn-on-auto-fill))
+;; (global-visual-line-mode t)
+;; (setq-default longlines-mode t)
+;; I am not going to play with this any longer, but here is what I've found out so far: (1) auto-fill will insert hard breaks after column-fill -- not really what you want; (2) visual-line-mode will insert soft break before you run into the right side of the screen, not after column-fill -- not really what you want; (3) long-lines-mode will do exactly what you want, but I can't set it in the emacs init file.
+
+;; this macro sets permissions
+(let ((r 4) (w 2) (x 1) (u 64) (g 8) (o 1))
+  (set-default-file-modes (+ (* u (+ r w x)) (* (+ g o) (+ r x)))))
+
+;; The next two lines enable cut/copy/paste with gnome
+;; they need to be commented out if working on a non-X terminal (e.g. putty)
+;; (setq x-select-enable-clipboard t)
+;; (setq interprogram-paste-function 'x-cut-buffer-or-selection-value)
+;; this needs to be in here for Emacs for Windows -- comment line above
+;; (setq interprogram-paste-function 'x-selection-value)
+
+;; COMMONLY USED MACROS
+; ``infmar'' sets the right margin to a virtually
+; infinite number so that the text goes on without
+; being broken into separate lines (useful for copying
+; into a word processor):
+;; (fset 'infmar
+;;    "\C-u999999\C-xf\C-xh\C-[xfill region\C-m")
+(fset 'infmar
+   [?\C-x ?r ?m ?i ?n ?f ?m ?a ?r return ?\C-u ?9 ?9 ?9 ?9 ?9 ?9 ?\C-x ?f ?\C-x ?h ?\M-x ?f ?i ?l ?l ?  ?r ?e ?g ?i ?o ?n return ?\C-x ?r ?b return])
+(fset 'revert
+   [?\M-x ?r ?e ?v ?e ?r ?t ?  ?b ?u ?f ?f ?e ?r return ?y])
+(fset 'setmarff
+   [?\C-x ?r ?m ?s ?e ?t ?m ?a ?r ?f ?f return ?\M-7 ?\M-0 ?\C-x ?f ?\C-x ?h ?\M-x ?f ?i ?l ?l ?  ?r ?e ?g ?i ?o ?n return ?\C-x ?r ?b ?s ?e ?t ?m ?a ?r ?f ?f return])
+(fset 'ldots
+   "{\\ldots}")
+(fset 'frac
+   "\\frac{}{}\263\C-h")
+(fset 'scite
+   "\\scite{}{}{}\C-u5\C-h")
+
+;; THIS IS THE FIRST _EMACS FILE I DOWNLOADED FROM THE INTERNET
+
+;; Keep Emacs from executing file local variables.
+;; (this is also in the site-init.el file loaded at emacs dump time.)
+(setq inhibit-local-variables t  ; v18
+      enable-local-variables nil ; v19
+      enable-local-eval nil)     ; v19
+
+;; Cause the region to be highlighted and prevent region-based commands
+;; from running when the mark isn't active.
+(pending-delete-mode t)
+(setq transient-mark-mode t)
+
+(setq kill-emacs-query-functions
+  (list (function (lambda ()
+                    (ding)
+                    (y-or-n-p "Really quit? ")))))
+
+;; STEFAN'S DEFUNS (vilog)
+
+;; I threw some of my old defuns into the pit at the end of the emacs
+;; config file and commented them out 2013-11-11
+
+;; here are websites to help with Emacs Lisp:
+;; http://xahlee.org/emacs/elisp_examples.html ;; this one's great for text editing
+;; http://www.fincher.org/tips/Languages/Emacs.shtml ;; this is a good cheat sheet
+;; http://www.gnu.org/software/emacs/emacs-lisp-intro/html_node/index.html ;; most helpful for writing functions
+;; http://www.delorie.com/gnu/docs/elisp-manual-21/elisp_toc.html
+;; elisp cookbook: http://www.emacswiki.org/emacs/ElispCookbook
+
+;; this is a good example for using interactive p (C-u 2 M-x stefan-insert-ubcconnect)
+;; there is an unnecessary step here; (= g 1) is for the case used most often (no p necessary), but that should be assigned to F5 and can be more complicated
+;; This macro makes F9 comment a region and F10 uncomment it
+
+;; it is assumed that pwgen.data is open
+;; create it by using the following shell command: i=0;while [ $i -lt 100 ];do pwgen -0 -A >> pwgen.data;i=`expr $i + 1`;done
+(fset 'quentin-insert-equation
+   [?\C-x ?b ?p ?w ?g ?e ?n ?. ?d ?a ?t ?a return ?\C-  ?\C-e ?\C-w ?\C-d ?\C-x ?\C-s ?\C-x ?b return ?\C-c ?\C-e ?e ?q ?u ?a ?t ?i ?o ?n return ?\C-y return])
+
+;; insert an equation in LaTeX with notag
+(fset 'insen
+   [?\C-c ?\C-e ?e ?q ?u ?a ?t ?i ?o ?n return f4 return ?\C-x ?r ?m ?y ?y ?t ?t return ?\\ ?n ?o ?t ?a ?g ?\C-a ?\C-j ?\C-j ?\C-o ?\C-x ?r ?b ?y ?y ?t ?t return])
+
+;; this is from http://ergoemacs.org/emacs/elisp_count-region.html
+(defun my-count-words-region (posBegin posEnd)
+  "Print number of words and chars in region."
+  (interactive "r")
+  (message "Counting it")
+  (save-excursion
+    (let (wordCount charCount)
+      (setq wordCount 0)
+      (setq charCount (- posEnd posBegin))
+      (goto-char posBegin)
+      (while (and (< (point) posEnd)
+                  (re-search-forward "\\w+\\W*" posEnd t))
+        (setq wordCount (1+ wordCount)))
+      (message "Words: %d. Chars: %d." wordCount charCount)
+      )))
+
+(fset 'lim
+   "\\lim_{}\C-h\\rightarrow\C-r{\\\C-l")
+
+(defun stefan-insert-pwgen (s) ;; written 2015-12-10
+  "Insert a no-numbers no-capitals password."
+  (interactive "p")
+(call-process "pwgen" nil t nil "-A" "-0")
+(backward-char 1)
+(delete-char 1)
+)
+
+(global-set-key [f4] 'stefan-insert-pwgen)
+
+(fset 'ref
+   "(\\ref{})\C-h\C-h")
+
+(fset 'dkl
+   [?D ?_ ?\{ ?\\ ?m ?b ?o ?x ?\{ ?\\ ?t ?i ?n ?y ?  ?K ?L ?\} ?\} ?\( ?, ?\) ?\C-h ?\C-h])
+
+(defun stefan-docbook-title (s) ;; written 2013-11-11
+  "Entering a title line."
+  (interactive "p")
+(setq begq (point))
+(move-end-of-line 1)
+(setq endq (point))
+(kill-region begq endq)
+(setq titlecontent (current-kill 0))
+(insert (concat "<sect" (number-to-string s) "><title>" titlecontent "</title>"))
+(forward-char))
+
+(defun stefan-docbook-list () ;; written 2014-04-29
+  "Make a docbook list."
+  (interactive)
+(setq listitemcontent "fornow")
+(insert "<itemizedlist>")
+(newline-and-indent)
+ (while (not (string= listitemcontent ""))
+   (progn
+(setq begq (point))
+(move-end-of-line 1)
+(setq endq (point))
+(kill-region begq endq)
+(setq listitemcontent (current-kill 0))
+(if (not (string= listitemcontent ""))
+      (progn
+(insert "<listitem><para>")
+(yank)
+(insert "</para></listitem>")))
+(forward-char)))
+(insert "</itemizedlist>")
+(newline-and-indent)
+(previous-line)
+(transpose-lines 1))
+
+(defun stefan-html-tag (tagname) ;; written 2014-04-29
+  "Enter the tag name, and emacs will do the rest."
+  (interactive "sEnter the tag name of the variable (default para): \n")
+  (if (string= tagname "")
+      (progn
+	(setq tagname "para")))
+(insert (concat "<" tagname "></" tagname ">"))
+(setq lot (+ 3 (length tagname)))
+(backward-char lot))
+
+(defun stefan-insert-ubcconnect (g) ;; written 2013-11-11
+  "Entering data for UBC Connect"
+  (interactive "p")
+(if (= g 1)
+    (progn
+      (move-end-of-line 1)
+      (backward-char)
+      (insert "2")
+      (move-beginning-of-line 1)
+      (next-line)))
+(if (= g 2)
+    (progn
+      (move-end-of-line 1)
+      (backward-char)
+      (insert "1")
+      (move-beginning-of-line 1)
+      (next-line)))
+(if (= g 3)
+    (progn
+      (move-end-of-line 1)
+      (backward-char)
+      (insert "0")
+      (move-beginning-of-line 1)
+      (next-line)))
+(if (= g 4)
+    (progn
+      (next-line)))
+)
+
+(defun chs (n k)
+  "The binomial coefficient."
+  (if (or (= k 0) (= k n)) 1
+    (+ (nck (- n 1) (- k 1)) (nck (- n 1) k))))
+
+(defun fac (integer)
+  "Compute factorial of an integer."
+  (if (= 1 integer) 1
+    (* integer (factorial (1- integer)))))
+
+(defun stefan-generate-binomials (nameOfFile n p) ;; written 2011-06-30
+  "Generate binomial distribution given n and p."
+  (interactive "FEnter the name of the output file: \nnEnter n: \nnEnter p: ")
+  (save-excursion
+   (with-temp-buffer
+(setq i1 0)
+(while (<= i1 n)
+(setq bin (* (expt p i1) (expt (- 1 p) (- n i1))))
+(setq Fbin (number-to-string (/ (round (* bin 100)) 100.0)))
+(setq mult (* bin (chs n i1)))
+(setq Fmult (number-to-string (/ (round (* mult 100)) 100.0)))
+(insert (concat (number-to-string n) " choose " (number-to-string i1) " = " (format "%-6d" (chs n i1)) " p^" (number-to-string i1) "*q^" (number-to-string (- n i1)) " = " Fbin " " Fmult))
+(newline-and-indent)
+  (setq i1 (+ i1 1)))
+     (when (file-writable-p nameOfFile)
+       (write-region (point-min)
+                     (point-max)
+                     nameOfFile)))))
+
+(defun stefan-elisp-for-routine (varfor from to) ;; written 2011-06-30
+  "You enter the variable, the numbers for from and to, and elisp inserts an elisp for routine."
+  (interactive "sEnter the name of the variable (default i1): \nsEnter the number from (default 0): \nsEnter the number to (no default): ")
+  (if (string= varfor "")
+      (progn
+	(setq varfor "i1")))
+  (if (string= from "")
+      (progn
+	(setq from "0")))
+(insert (concat "(setq " varfor " " from ")"))
+(newline-and-indent)
+(insert (concat "(while (<= " varfor " " to ")"))
+(newline-and-indent)
+(insert (concat "(setq " varfor " (+ " varfor " 1)))"))
+(newline-and-indent)
+(previous-line)
+(newline-and-indent)
+(previous-line))
+
+(defun stefan-create-pdfconv (year authorfn authorln title) ;; written 2010-08-28 not finished
+  "Create pdf convention filename"
+  (interactive "sEnter year: \nsEnter authorfn: \nsEnter authorln: \nsEnter title: ")
+  (insert year)
+  (insert "__")
+  (insert authorln)
+  (insert "_")
+  (insert authorfn)
+  (insert "__")
+  (setq i1 (point))
+  (insert title)
+  (setq i2 (point))
+  (replace-string " " "_" nil i1 i2)
+  (goto-char i2)
+  (insert ".pdf")
+)
+
+(defun stefan-insert-zitat (pageNumber) ;; written 2010-04-04
+  "Entering data for Zitate"
+  (interactive "sEnter the page number: ")
+(insert "(")
+(insert (get-register (string-to-char "t")))
+(insert (concat	", " pageNumber ")"))
+(org-meta-return)
+(previous-line)
+(fill-paragraph)
+(forward-paragraph)
+(org-end-of-line)
+)
+
+;; This obviously doesn't need to be in emacs config, but it's a good
+;; sample for string comparison and data entry with defaults
+(defun stefan-insert-reno-2009 (month day name gstno description amount) ;; written 2010-04-04
+  "Entering data for reno 2009"
+  (interactive "sMonth (default 2): \nsDay: \nsName (default Home Depot): \nsGST Number (default R135772911): \nsDescription: \nsAmount: ")
+(if (string= month "")
+    (setq monthx "02")
+    (setq monthx (concat "0" month))
+  )
+(setq date (concat "2009-" monthx "-" day))
+(if (string= name "")
+    (setq namex "Home Depot Return")
+    (setq namex name)
+  )
+(if (string= gstno "")
+    (setq gstnox "R135772911")
+    (setq gstnox gstno)
+  )
+(setq amountnum (string-to-number amount))
+(if (= amountnum (floor amountnum))
+    (progn
+      (setq befdot (/ amountnum 100))
+      (setq aftdot (- amountnum (* (/ amountnum 100) 100)))
+      (setq amountx (concat (number-to-string befdot) "." (number-to-string aftdot)))
+)
+  (setq amountx amount)
+  )
+(insert (concat date "," namex "," gstnox "," description "," amountx))
+(newline)
+)
+
+(defun stefan-mutt-reply () ;; written 2010-03-15
+  "Get below the headers and begin typing your reply in mutt."
+  (interactive)
+(forward-paragraph)
+(next-line)
+(open-line 2))
+(global-set-key [f2] 'stefan-mutt-reply)
+
+(defun stefan-reclaim-keybindings () ;; written 2010-03-09
+  "Sometimes a major-mode will override these keybindings (C-j in auctex, C-j and C-k in org-mode). Use this fundction to reclaim these particular keybindings."
+  (interactive)
+(local-unset-key "\C-j")
+(local-unset-key "\C-k")
+(local-unset-key "\M-h"))
+(global-set-key [f3] 'stefan-reclaim-keybindings)
+
+(defun stefan-next-parened-number () ;; written 2010-01-22
+  "Advance to the next point in a (n) numbered list."
+  (interactive)
+(setq p1 (point))
+(backward-paragraph)
+(unless (= (point) 1)
+(next-line)
+)
+(forward-char)
+(setq p2 (point))
+(search-forward ")")
+(backward-char)
+(setq p3 (point))
+(setq prevNum (buffer-substring p2 p3))
+(setq t1 (string-to-number prevNum))
+(setq t1 (+ t1 1))
+(goto-char p1)
+(newline 2)
+(insert "(")
+(insert (number-to-string t1))
+(insert ") "))
+
+(defun stefan-yank-repeatedly (numberOfYanks) ;; written 2009-11-20 improved 2009-11-24
+  "Because C-u 10 C-y yanks item number 10 in the kill-ring, we need a different command to yank repeatedly. Enter the number of yanks as a prefix."
+  (interactive "p")
+  (setq i1 0)
+(while (< i1 numberOfYanks)
+(yank)
+(setq i1 (+ i1 1))))
+
+(defun stefan-perl-open-routine (nameOfFile nameOfVariable) ;; written 2009-10-28
+  "Writes a perl open file routine."
+  (interactive "sEnter the name of the file (e.g. input.data): \nsEnter the name of the array (e.g. data): ")
+  (insert "open(")
+  (insert nameOfVariable)
+  (insert ",\"<./")
+  (insert nameOfFile)
+  (insert "\");")
+    (newline)
+  (insert "@")
+  (insert nameOfVariable)
+  (insert "=<")
+  (insert nameOfVariable)
+  (insert ">;")
+    (newline)
+  (insert "close(")
+  (insert nameOfVariable)
+  (insert ");")
+    (newline)
+  (insert "foreach $")
+  (insert nameOfVariable)
+  (insert " (@")
+  (insert nameOfVariable)
+  (insert ")")
+    (newline)
+  (insert "{")
+    (newline)
+  (insert "    chomp($")
+  (insert nameOfVariable)
+  (insert ");")
+    (newline)
+  (insert "}")
+    (newline)
+)
+
+(defun stefan-increase-by-one-zero-padded () ;; written 2009-10-27
+  "Takes a region which has exactly two digits in it (i.e. 03) and increases it by 1 (to 04). See also function increment-register."
+  (interactive "*")
+  (setq dd (buffer-substring (region-beginning) (region-end)))
+  (setq firstDigit (substring dd 0 1))
+  (setq lastDigit (substring dd 1))
+  (setq n1 (string-to-number firstDigit))
+  (setq n2 (string-to-number lastDigit))
+(if (= n1 0)
+    (progn
+      (if (= n2 9)
+	  (setq newString "10")
+(setq n3 (+ n2 1))
+(setq newString (concat "0" (number-to-string n3)))))
+  (setq n4 (string-to-number dd))
+  (setq n5 (+ n4 1))
+  (setq newString (number-to-string n5))
+  )
+  (delete-region (region-beginning) (region-end))
+  (insert newString)
+)
+
+(defun stefan-increase-by-one-non-padded () ;; written 2009-10-27
+  "Takes a region which is a number (e.g. 4) and increases it by 1 (to 5). See also function increment-register."
+  (interactive "*")
+(setq dd (buffer-substring (region-beginning) (region-end)))
+(setq n1 (string-to-number dd))
+(setq n2 (+ n1 1))
+(setq newString (number-to-string n2))
+(delete-region (region-beginning) (region-end))
+(insert newString)
+)
+
+(defun stefan-insert-date-stamp () ;; written 2009-10-27
+  "Insert current date at current position."
+  (interactive "*")
+  (message "inserting the date ...")
+    (insert (format-time-string "%Y-%m-%d" (current-time)))
+    )
+
+;; I fixed this on 2009-10-25
+;; this was the website that helped: http://www.gnu.org/software/emacs/emacs-lisp-intro/html_node/defun.html
+;; I used the following websites to do this:
+;; http://mypage.iu.edu/~colallen/lp/lp.html
+;; http://xahlee.org/emacs/elisp_examples.html
+;; http://www.rattlesnake.com/intro/index.html
+;; http://www.delorie.com/gnu/docs/elisp-manual-21/elisp_289.html
+(defun stefan-perl-for-routine (varfor)
+  "You enter the variable and elisp inserts a perl for routine."
+  (interactive "sEnter the name of the for variable: ")
+    (insert "for ($")
+    (insert varfor)
+    (insert "=0;$")
+    (insert varfor)
+    (insert "<=")
+    (newline)
+    (insert ";++$")
+    (insert varfor)
+    (insert ")")
+    (newline)
+    (insert "{")
+    (newline)
+    (newline)
+    (insert "}")
+    (previous-line)
+    (previous-line)
+    (previous-line)
+    (delete-backward-char 1)
+)
+
+(defun stefan-create-asy-template-with-coordinates (nameOfFile xmax ymax) ;; written 2009-10-31
+  "Create a template asy files with an invisible coordinate system."
+  (interactive "FEnter the name of the asy file: \nnEnter the maximum x coordinate (<100): \nnEnter the maximum y coordinate (<100): ")
+  (save-excursion
+   (with-temp-buffer
+;;  (insert (format "This is a test, the x is %d and the y is %d." xmax ymax))
+(insert "size(600pt,600pt);")(newline-and-indent)
+(insert "real m=1;")(newline-and-indent)
+(insert "real n=1;")(newline-and-indent)
+(newline-and-indent)
+(insert "// real fl=-1;")(newline-and-indent)
+(insert "// real fr=15;")(newline-and-indent)
+(insert "// real fu=20;")(newline-and-indent)
+(insert "// real fd=-1;")(newline-and-indent)
+(insert "// path frame=((fl*m,fu*n)--(fr*m,fu*n)--(fr*m,fd*n)--(fl*m,fd*n)--cycle);")(newline-and-indent)
+(insert "// draw(frame,linewidth(0));")(newline-and-indent)
+(insert "// for the next function, this would be much better for a frame:")(newline-and-indent)
+(insert "// real mgx=.25;")(newline-and-indent)
+(insert "// real mgy=.25;")(newline-and-indent)
+(insert "// pair framesw=shift((-mgx*m,-mgy*m))*x0000;")(newline-and-indent)
+(insert "// pair framenw=shift((-mgx*m,mgy*m))*x0004;")(newline-and-indent)
+(insert "// pair framene=shift((mgx*m,mgy*m))*x0604;")(newline-and-indent)
+(insert "// pair framese=shift((mgx*m,-mgy*m))*x0600;")(newline-and-indent)
+(insert "// path frame=(framesw--framenw--framene--framese--cycle);")(newline-and-indent)
+(insert "// draw(frame,linewidth(0));")(newline-and-indent)
+(setq i1 0)
+(while (<= i1 xmax)
+(setq i2 0)
+  (while (<= i2 ymax)
+(if (< i1 10)
+      (setq xstring (concat "0" (number-to-string i1)))
+      (setq xstring (number-to-string i1)))
+(if (< i2 10)
+      (setq ystring (concat "0" (number-to-string i2)))
+      (setq ystring (number-to-string i2)))
+(insert (format "pair x%s%s=(%d*m,%d*n);" xstring ystring i1 i2))(newline-and-indent)
+(setq i2 (+ i2 1)))
+(setq i1 (+ i1 1)))
+(newline-and-indent)
+(insert "// see http://webdesign.about.com/od/colorcharts/l/bl_namedcolors.htm for colours")(newline-and-indent)
+(insert "// for Venn-diagram style intersections see the clip command in xthoughts.asy")(newline-and-indent)
+(insert "// pen wall=linewidth(3);")(newline-and-indent)
+(insert "// pen redwall=linewidth(3)+rgb(0,255,0);")(newline-and-indent)
+(insert "// path p03=shift((0*m,-8*m))*p01;")(newline-and-indent)
+(insert "// fill(sink1,sinkpen);")(newline-and-indent)
+(insert "// fill(tub,rgb(0,0,139));")(newline-and-indent)
+(insert "// draw(p02,redwall);")(newline-and-indent)
+(insert "// label(\"Sauna\",x0611);")(newline-and-indent)
+(insert "// real square_root_of_two=2**.5;")(newline-and-indent)
+(insert "// path unit_circle=shift(1,1)*circle((0,0),1);")(newline-and-indent)
+(insert "// label(\"\\parbox{1.5in}{\\centering \\textsf{kilometre (km){\\newline}1 km = 1000 metres}}\",box25);")(newline-and-indent)
+(insert "// label(\"\\textsf{\\normalsize{0}}\",x01,NE);")(newline-and-indent)
+(insert "// path kreis=(x08{up}..{left}x02{left}..{down}x04{down}..{right}x06{right}..{up}x08);")(newline-and-indent)
+(insert "// dot(x01--x02--x03--x04--x05--x06--x07--x08);")(newline-and-indent)
+(insert "// fill(shift(c1)*xscale(rx*x)*yscale(ry*y)*unitcircle,ubuntu_yellow);")(newline-and-indent)
+(newline-and-indent)
+(newline-and-indent)
+     (when (file-writable-p nameOfFile)
+       (write-region (point-min)
+                     (point-max)
+                     nameOfFile))))
+)
+
+;; END STEFAN'S DEFUNS ;;
+
+;; Below are changes taken from the tutor .emacs file
+;; Added by Craig Ruefenacht
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;
+;;;; This provides customized support for writing programs in different kinds
+;;;; of programming languages.
+;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Load the C++ and C editing modes and specify which file extensions
+;; correspond to which modes.
+(autoload 'python-mode "python-mode" "Python editing mode." t)
+    (setq auto-mode-alist
+           (cons '("\\.py$" . python-mode) auto-mode-alist))
+     (setq interpreter-mode-alist
+           (cons '("python" . python-mode) interpreter-mode-alist))
+
+(autoload 'c++-mode "cc-mode" "C++ Editing Mode" t)
+(autoload 'c-mode "c-mode" "C Editing Mode"   t)
+(setq auto-mode-alist
+      (append '(("\\.C\\'" . c++-mode)
+                ("\\.cc\\'" . c++-mode)
+		("\\.c\\'" . c-mode)
+                ("\\.h\\'"  . c++-mode))
+	      auto-mode-alist))
+
+;; set tab distance to something, so it doesn't change randomly and confuse people
+(setq c-basic-offset 2)
+
+;; This function is used in various programming language mode hooks below.  It
+;; does indentation after every newline when writing a program.
+
+(defun newline-indents ()
+  "Bind Return to `newline-and-indent' in the local keymap."
+  (local-set-key "\C-m" 'newline-and-indent))
+
+;; Tell Emacs to use the function above in certain editing modes.
+
+(add-hook 'lisp-mode-hook             (function newline-indents))
+(add-hook 'emacs-lisp-mode-hook       (function newline-indents))
+(add-hook 'lisp-interaction-mode-hook (function newline-indents))
+(add-hook 'scheme-mode-hook           (function newline-indents))
+(add-hook 'c-mode-hook                (function newline-indents))
+(add-hook 'c++-mode-hook              (function newline-indents))
+
+
+;; Fortran mode provides a special newline-and-indent function.
+
+(add-hook 'fortran-mode-hook
+	  (function (lambda ()
+		      (local-set-key "\C-m" 'fortran-indent-new-line))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;
+;;;; This makes "M-x compile" smarter by trying to guess what the compilation
+;;;; command should be for the C, C++, and Fortran language modes.
+;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; By requiring `compile' at this point, we help to ensure that the global
+;; value of compile-command is set properly.  If `compile' is autoloaded when
+;; the current buffer has a buffer-local copy of compile-command, then the
+;; global value doesn't get set properly.
+
+(require 'compile)
+
+
+;; This gives the form of the default compilation command for C++, C, and
+;; Fortran programs.  Specifying the "-lm" option for C and C++  eliminates a
+;; lot of potential confusion.
+
+(defvar compile-guess-command-table
+  '((c-mode       . "gcc -Wall -g %s -o %s -lm"); Doesn't work for ".h" files.
+    (c++-mode     . "g++ -g %s -o %s -lm")	; Doesn't work for ".h" files.
+    (fortran-mode . "f77 -C %s -o %s")
+    )
+  "*Association list of major modes to compilation command descriptions, used
+by the function `compile-guess-command'.  For each major mode, the compilation
+command may be described by either:
+
+   A string, which is used as a format string.  The format string must accept
+    two arguments: the simple (non-directory) name of the file to be compiled,
+    and the name of the program to be produced.
+
+   A function.  In this case, the function is called with the two arguments
+    described above and must return the compilation command.")
+
+;; This code guesses the right compilation command when Emacs is asked
+;; to compile the contents of a buffer.  It bases this guess upon the
+;; filename extension of the file in the buffer.
+
+(defun compile-guess-command ()
+
+  (let ((command-for-mode (cdr (assq major-mode
+				     compile-guess-command-table))))
+    (if (and command-for-mode
+	     (stringp buffer-file-name))
+	(let* ((file-name (file-name-nondirectory buffer-file-name))
+	       (file-name-sans-suffix (if (and (string-match "\\.[^.]*\\'"
+							     file-name)
+					       (> (match-beginning 0) 0))
+					  (substring file-name
+						     0 (match-beginning 0))
+					nil)))
+	  (if file-name-sans-suffix
+	      (progn
+		(make-local-variable 'compile-command)
+		(setq compile-command
+		      (if (stringp command-for-mode)
+			  ;; Optimize the common case.
+			  (format command-for-mode
+				  file-name file-name-sans-suffix)
+			(funcall command-for-mode
+				 file-name file-name-sans-suffix)))
+		compile-command)
+	    nil))
+      nil)))
+
+;; Add the appropriate mode hooks.
+
+(add-hook 'c-mode-hook       (function compile-guess-command))
+(add-hook 'c++-mode-hook     (function compile-guess-command))
+(add-hook 'fortran-mode-hook (function compile-guess-command))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;
+;;;; This creates and adds a "Compile" menu to the compiled language modes.
+;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar compile-menu nil
+  "The \"Compile\" menu keymap.")
+
+(defvar check-option-modes nil
+  "The list of major modes in which the \"Check\" option in the \"Compile\"
+menu should be used.")
+
+(defvar compile-menu-modes nil
+  "The list of major modes in which the \"Compile\" menu has been installed.
+This list used by the function `add-compile-menu-to-mode', which is called by
+various major mode hooks.")
+
+
+;; Create the "Compile" menu.
+
+(if compile-menu
+    nil
+  (setq compile-menu (make-sparse-keymap "Compile"))
+  ;; Define the menu from the bottom up.
+  (define-key compile-menu [first-error] '("    First Compilation Error" .
+					   first-compilation-error))
+  (define-key compile-menu [prev-error]  '("    Previous Compilation Error" .
+					   previous-compilation-error))
+  (define-key compile-menu [next-error]  '("    Next Compilation Error" .
+					   next-error))
+  (define-key compile-menu [goto-line]   '("    Line Number..." .
+					   goto-line))
+
+  (define-key compile-menu [goto]        '("Goto:" . nil))
+  ;;
+  (define-key compile-menu [indent-region] '("Indent Selection" .
+					     indent-region))
+
+  (define-key compile-menu [make]         '("Make..." . make))
+
+  (define-key compile-menu [check-file]   '("Check This File..." .
+					    check-file))
+
+  (define-key compile-menu [compile]     '("Compile This File..." . compile))
+  )
+
+
+;;; Enable check-file only in Fortran mode buffers
+
+(put 'check-file 'menu-enable '(eq major-mode 'fortran-mode))
+
+
+;;; Here are the new commands that are invoked by the "Compile" menu.
+
+(defun previous-compilation-error ()
+  "Visit previous compilation error message and corresponding source code.
+See the documentation for the command `next-error' for more information."
+  (interactive)
+  (next-error -1))
+
+(defun first-compilation-error ()
+  "Visit the first compilation error message and corresponding source code.
+See the documentation for the command `next-error' for more information."
+  (interactive)
+  (next-error '(4)))
+
+(defvar check-history nil)
+
+(defun check-file ()
+  "Run ftnchek on the file contained in the current buffer"
+  (interactive)
+  (let* ((file-name (file-name-nondirectory buffer-file-name))
+	 (check-command (read-from-minibuffer
+			 "Check command: "
+			 (format "ftnchek %s" file-name) nil nil
+			 '(check-history . 1))))
+    (save-some-buffers nil nil)
+    (compile-internal check-command "Can't find next/previous error"
+		      "Checking" nil nil nil)))
+
+(defun make ()
+  "Run make in the directory of the file contained in the current buffer"
+  (interactive)
+  (save-some-buffers nil nil)
+  (compile-internal (read-from-minibuffer "Make command: " "make ")
+		    "Can't find next/previous error" "Make"
+		    nil nil nil))
+
+
+;;; Define a function to be called by the compiled language mode hooks.
+
+(defun add-compile-menu-to-mode ()
+  "If the current major mode doesn't already have access to the \"Compile\"
+menu, add it to the menu bar."
+  (if (memq major-mode compile-menu-modes)
+      nil
+    (local-set-key [menu-bar compile] (cons "Compile" compile-menu))
+    (setq compile-menu-modes (cons major-mode compile-menu-modes))
+    ))
+
+;; And finally, make sure that the "Compile" menu is available in C, C++, and
+;; Fortran modes.
+(add-hook 'c-mode-hook       (function add-compile-menu-to-mode))
+(add-hook 'c++-c-mode-hook   (function add-compile-menu-to-mode))
+(add-hook 'c++-mode-hook     (function add-compile-menu-to-mode))
+(add-hook 'fortran-mode-hook (function add-compile-menu-to-mode))
+
+;; This is how emacs tells the file type by the file suffix.
+(setq auto-mode-alist
+      (append '(("\\.mss$" . scribe-mode))
+	      '(("\\.bib$" . bibtex-mode))
+	      '(("\\.tex$" . latex-mode))
+	      '(("\\.obj$" . lisp-mode))
+	      '(("\\.st$"  . smalltalk-mode))
+	      '(("\\.Z$"   . uncompress-while-visiting))
+	      '(("\\.cs$"  . indented-text-mode))
+	      '(("\\.C$"   . c++-mode))
+	      '(("\\.cc$"  . c++-mode))
+	      '(("\\.icc$" . c++-mode))
+	      '(("\\.c$"   . c-mode))
+	      '(("\\.y$"   . c-mode))
+	      '(("\\.h$"   . c++-mode))
+	      auto-mode-alist))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(show-paren-mode t)
+ '(tool-bar-mode nil)
+ '(menu-bar-mode nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

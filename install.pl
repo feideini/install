@@ -1,3 +1,7 @@
+# COMMENTS 2017-01-16 I hope I have taken care of most of these concerns.
+# The greatest leap forward is the establishment of 
+# https://github.com/feideini/install.git
+
 # COMMENTS 2016-06-14 It is not clear how to run these two files. I
 # think the idea is to run install.pl first to install guake, then to
 # interrupt it and run install-local.pl, and then to run install.pl
@@ -6,47 +10,58 @@
 # computers. Define them as variables (especially, guake preferences
 # file). --> things didn't go well with auctex and zenburn, either.
 
-# setting some variables
-$install="/media/pi/134578d5-ab2b-42d7-acee-ef4be0a6852c/barney/computer/install";
-$emacs="/usr/share/emacs/site-lisp";
-# $homename="stefan";
-$homename="pi";
-
-# installing guake before running the local file
-print "INFO: Installing guake ...\n";
-system "apt-get --assume-yes install guake";
-
-print "TODO: Set install directory (also in install-local.pl) and emacs install directory in install.pl.\n";
-print "TODO: If you have not done so yet abort. Confirm by pressing ENTER. ";
+print "I am assuming you have git clone'd install and moved install.pl to the home folder.\n";
+print "I want you to be in your home directory. If you are not, abort. Confirm by pressing ENTER. ";
 $xq = <STDIN>;
-print "TODO: If you have not run install-local.pl yet abort and run it. Confirm by pressing ENTER. ";
-$qx = <STDIN>;
+print "Run install-local-pre.pl first. If you haven't yet, abort. Confirm by pressing ENTER. ";
+$yq = <STDIN>;
+print "Let's set some variables first.\n";
+print "Home name (stefan/pi)? [stefan] ";
+$homename=<STDIN>;
+chomp($homename);
+if ($homename eq "")
+{
+    $homename="stefan";
+    print "Home name is $homename\n";
+}
+else
+{
+    print "Home name is $homename\n";
+}
+$emacs="/usr/share/emacs24/site-lisp";
+# $emacs="/usr/share/emacs/site-lisp";
+print "Emacs installation directory is $emacs\n";
 
 print "Do you want to install LaTeX? (y/n) ";
 $latexq = <STDIN>;
 chomp($latexq);
 
+print "First, we'll get installing postfix out of the way because it will prompt you.\n";
+print "INFO: Installing postfix for abcde ...\n";
+system "apt-get --assume-yes install postfix";
+
+# setting some variables
+# $install="/media/pi/134578d5-ab2b-42d7-acee-ef4be0a6852c/barney/computer/install";
+# $homename="stefan";
+# $homename="pi";
+
+# installing guake before running the local file
+# print "INFO: Installing guake ...\n";
+# system "apt-get --assume-yes install guake";
+
+# print "TODO: Set install directory (also in install-local.pl) and emacs install directory in install.pl.\n";
+# print "TODO: If you have not done so yet abort. Confirm by pressing ENTER. ";
+# $xq = <STDIN>;
+# print "TODO: If you have not run install-local.pl yet abort and run it. Confirm by pressing ENTER. ";
+# $qx = <STDIN>;
+
 # installing gvim
 print "INFO: Installing gvim ...\n";
 system "apt-get --assume-yes install vim-gtk";
-
-# intalling emacs modules
-system "cp -v $install/asy-mode.el $emacs";
-system "chmod 644 $emacs/asy-mode.el";
-
-system "cp -v $install/csv-mode.el $emacs";
-system "chmod 644 $emacs/csv-mode.el";
-
-system "cp -v $install/key-chord.el $emacs";
-system "chmod 644 $emacs/key-chord.el";
-
-system "cp -v $install/php-mode.el $emacs";
-system "chmod 644 $emacs/php-mode.el";
-
-system "cp -v $install/zenburn-theme.el $emacs";
-system "chmod 644 $emacs/zenburn-theme.el";
-
+    
 # programs to install added later
+print "INFO: Installing terminator for abcde ...\n";
+system "apt-get --assume-yes install terminator";
 print "INFO: Installing eyed3 for abcde ...\n";
 system "apt-get --assume-yes install eyed3";
 print "INFO: Installing gthumb ...\n";
@@ -63,12 +78,12 @@ print "INFO: Installing gpodder ...\n";
 system "apt-get --assume-yes install gpodder";
 print "INFO: Installing gftp ...\n";
 system "apt-get --assume-yes install gftp";
+print "INFO: Installing auctex ...\n";
+system "apt-get --assume-yes install auctex";
 
 # installing LaTeX
 if ($latexq eq "y")
    {
-print "INFO: Installing auctex ...\n";
-system "apt-get --assume-yes install auctex";
 print "INFO: Installing context ...\n";
 system "apt-get --assume-yes install context";
 print "INFO: Installing texlive ...\n";
@@ -163,12 +178,29 @@ system "apt-get --assume-yes install xournal";
 # system "apt-get install audio-recorder";
 
 # installing perl modules
-system "sudo make -C /home/$homename/ProgramFiles/Statistics-R-0.33 install";
-print "TODO: run make -C /home/$homename/ProgramFiles/Statistics-R-0.33 test\n";
+# system "sudo make -C /home/$homename/ProgramFiles/Statistics-R-0.33 install";
+# print "TODO: run make -C /home/$homename/ProgramFiles/Statistics-R-0.33 test\n";
 
+# installing emacs modules
+system "cp -v ./install/asy-mode.el $emacs";
+system "chmod 644 $emacs/asy-mode.el";
+
+system "cp -v ./install/csv-mode.el $emacs";
+system "chmod 644 $emacs/csv-mode.el";
+
+system "cp -v ./install/key-chord.el $emacs";
+system "chmod 644 $emacs/key-chord.el";
+
+system "cp -v ./install/php-mode.el $emacs";
+system "chmod 644 $emacs/php-mode.el";
+
+system "cp -v ./install/zenburn-theme.el $emacs";
+system "chmod 644 $emacs/zenburn-theme.el";
+
+# installing vim modules
 print "TODO: You must run :PluginInstall in gvim manually (start gvim by pressing Alt-F2 and\n";
 print "TODO: typing gvim -- the colour scheme error will be taken care of by vundle).\n";
-# not working don't know why
 # system "export PATH=$PATH:/home/$homename/bin";
-print "TODO: You must run export PATH=\$PATH:/home/$homename/bin manually.";
+print "TODO: You must also run export PATH=\$PATH:/home/$homename/bin manually.";
+print "TODO: Now run install-local-post.pl.\n";
 
