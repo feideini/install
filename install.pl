@@ -244,6 +244,10 @@ system "cp -v /usr/share/applications/xournal.desktop /home/$homename/Desktop/";
 system "chown $homename:$homename /home/$homename/Desktop/xournal.desktop";
 system "chmod 755 /home/$homename/Desktop/xournal.desktop";
 
+system "cp -v /usr/share/applications/www.octave.org-octave.desktop /home/$homename/Desktop/";
+system "chown $homename:$homename /home/$homename/Desktop/www.octave.org-octave.desktop";
+system "chmod 755 /home/$homename/Desktop/www.octave.org-octave.desktop";
+
 # installing vim modules
 print "TODO: You must run :PluginInstall in gvim manually (start gvim by pressing Alt-F2 and\n";
 print "TODO: typing gvim -- the colour scheme error will be taken care of by vundle).\n";

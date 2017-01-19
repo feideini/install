@@ -1,7 +1,7 @@
 ;; The next few lines need to be customized for new emacs installations
 
 ;; (setq default-directory "S:/stefan-2014/literatur/hypomnemata/")
-(setq default-directory "/media/stefan/134578d5-ab2b-42d7-acee-ef4be0a6852c/barney/literatur/hypomnemata/")
+(setq default-directory "/media/stefan/134578d5-ab2b-42d7-acee-ef4be0a6852c/git-online/hypo-unenc/")
 
 
 ;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/color-theme-6.6.0")
@@ -124,11 +124,11 @@
 
 ;; GLOBAL DEFUNS
 (defun stefan-insert-LaTeX-dollarsigns () ;; written 2013-04-02
-  "Insert dollarsigns in LaTeX for math content. Bound to F6."
+  "Insert dollarsigns in LaTeX for math content. Bound to F7."
   (interactive)
   (insert "$$")
   (backward-char 1))
-(global-set-key [f6] 'stefan-insert-LaTeX-dollarsigns)
+(global-set-key [f7] 'stefan-insert-LaTeX-dollarsigns)
 
 (defun match-paren (arg)
       "Go to the matching paren if on a paren; otherwise insert %."
