@@ -75,7 +75,7 @@
                 (font-lock-mode 1))))
 
 ;; GRAPHVIZ
-(load-file "/usr/share/emacs/23.3/site-lisp/graphviz-dot-mode.el")
+;; (load-file "/usr/share/emacs/23.3/site-lisp/graphviz-dot-mode.el")
 
 ;; do not write macros for f7 and f8 - they are reserved for on-the-fly macros
 ;; (global-set-key [f7] 't1)
@@ -271,26 +271,6 @@
 ;; this is a good example for using interactive p (C-u 2 M-x stefan-insert-ubcconnect)
 ;; there is an unnecessary step here; (= g 1) is for the case used most often (no p necessary), but that should be assigned to F5 and can be more complicated
 ;; This macro makes F9 comment a region and F10 uncomment it
-
-(defun stefan-beamer-insert-figure (figname scale) ;; written 2017-03-19
-  "Enter the name of the figure, and emacs will do the rest."
-  (interactive "sEnter the tag name of the figure (dot png assumed): \nsEnter the scaling factor (default is 0.5): \n")
-  (unless (string-match "\\\." figname)
-    (setq figname (concat figname ".png")))
-  (if (string= scale "")
-    (setq scale "0.5"))
-(insert "\\begin{figure}[h]")
-(newline-and-indent)
-(insert (concat "\\includegraphics[scale=" scale "]{./" figname "}"))
-(newline-and-indent)
-(insert "\\end{figure}")
-(newline-and-indent)
-)
-
-(key-chord-define-global "bf" 'stefan-beamer-insert-figure)
-
-(fset 'leri
-   "\\left(\\right)\C-h\C-h\C-h\C-h\C-h\C-h\C-h")
 
 ;; it is assumed that pwgen.data is open
 ;; create it by using the following shell command: i=0;while [ $i -lt 100 ];do pwgen -0 -A >> pwgen.data;i=`expr $i + 1`;done

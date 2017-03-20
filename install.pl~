@@ -60,21 +60,15 @@ print "INFO: Installing gvim ...\n";
 system "apt-get --assume-yes install vim-gtk";
     
 # programs to install added later
-print "INFO: Installing gimp ...\n";
-system "apt-get --assume-yes install gimp";
-print "INFO: Installing graphviz ...\n";
-system "apt-get --assume-yes install gparted";
-print "INFO: Installing graphviz ...\n";
-system "apt-get --assume-yes install graphviz";
-print "INFO: Installing kdiff3 ...\n";
+print "INFO: Installing kdiff3 for abcde ...\n";
 system "apt-get --assume-yes install kdiff3";
-print "INFO: Installing xsel ...\n";
+print "INFO: Installing xsel for abcde ...\n";
 system "apt-get --assume-yes install xsel";
-print "INFO: Installing shutter ...\n";
+print "INFO: Installing shutter for abcde ...\n";
 system "apt-get --assume-yes install shutter";
-print "INFO: Installing terminator ...\n";
+print "INFO: Installing terminator for abcde ...\n";
 system "apt-get --assume-yes install terminator";
-print "INFO: Installing eyed3 ...\n";
+print "INFO: Installing eyed3 for abcde ...\n";
 system "apt-get --assume-yes install eyed3";
 print "INFO: Installing gthumb ...\n";
 system "apt-get --assume-yes install gthumb";
@@ -194,9 +188,6 @@ system "apt-get --assume-yes install xournal";
 # print "TODO: run make -C /home/$homename/ProgramFiles/Statistics-R-0.33 test\n";
 
 # installing emacs modules
-system "cp -v ./install/graphviz-dot-mode.el $emacs";
-system "chmod 644 $emacs/asy-mode.el";
-
 system "cp -v ./install/asy-mode.el $emacs";
 system "chmod 644 $emacs/asy-mode.el";
 
