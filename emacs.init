@@ -1,10 +1,16 @@
-;; The next few lines need to be customized for new emacs installations
+;; Organization:
+;; (1) to be customized for new installations
+;; (2) various programs
+;; (3) general settings
+;; (4) my functions
+;; (5) my macros
+;; (6) other/old
 
-;; (setq default-directory "S:/stefan-2014/literatur/hypomnemata/")
+;; (1) to be customized for new installations
+
 (setq default-directory "/media/stefan/134578d5-ab2b-42d7-acee-ef4be0a6852c/git-online/hypo-unenc/")
 
-
-;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/color-theme-6.6.0")
+;; (2) various programs
 
 ;; RECENTF
 (require 'recentf)
@@ -30,24 +36,9 @@
 (require 'ess-site)
 
 ;; KEY-CHORD
+;; specific key-chord are in my macros
 (require 'key-chord)
 (key-chord-mode 1)
-
-(key-chord-define-global "jk" 'dabbrev-expand)
-
-;; insert an equation in LaTeX
-(fset 'inseq
-   [?\C-c ?\C-e ?e ?q ?u ?a ?t ?i ?o ?n return f4 return ?\C-x ?r ?m ?y ?y ?t ?t return ?\C-a ?\C-j ?\C-j ?\C-o ?\C-k ?\C-k ?\C-x ?r ?b ?y ?y ?t ?t return])
-(key-chord-define-global "qw" 'inseq)
-
-(fset 'degree
-   "^{\\circ}")
-(key-chord-define-global "dg" 'degree)
-
-;; (key-chord-define-global "qw" 'stefan-insert-double-quotes)
-;; (key-chord-define-global "sd" 'stefan-increase-by-one-zero-padded)
-;; (key-chord-define-global "sf" 'isearch-forward-regexp)
-;; (key-chord-define-global "yu" 'stefan-yank-repeatedly)
 
 ;; PHP-MODE
 (require 'php-mode)
@@ -75,11 +66,7 @@
                 (font-lock-mode 1))))
 
 ;; GRAPHVIZ
-(load-file "/usr/share/emacs/23.3/site-lisp/graphviz-dot-mode.el")
-
-;; do not write macros for f7 and f8 - they are reserved for on-the-fly macros
-;; (global-set-key [f7] 't1)
-;; (global-set-key [f8] 't2)
+(load-file "/usr/share/emacs24/site-lisp/graphviz-dot-mode.el")
 
 ;; ASYMPTOTE
 (autoload 'asy-mode "asy-mode.el" "Asymptote major mode." t)
@@ -106,7 +93,22 @@
 ;; (load "folding" 'nomessage 'noerror)
 ;;  (folding-mode-add-find-file-hook)
 
-;; GLOBALS
+;; (3) general settings
+
+;; various
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+(setq inhibit-startup-message t)
+(fset 'yes-or-no-p 'y-or-n-p)
+(setq scroll-step 1)
+(setq sentence-end "[.?!][]\"')]*\\($\\|\t\\| \\)[ \t\n]*")
+(setq sentence-end-double-space nil)
+(mouse-avoidance-mode 'banish)
+;; (read-abbrev-file "~/.abbrev_defs")
+(setq-default abbrev-mode t)
+(setq save-abbrevs t)
+
 ;; VI-TYPE MOVEMENT
 (global-set-key "\C-k" 'previous-line)
 (global-set-key "\C-j" 'next-line)
@@ -121,84 +123,6 @@
 (global-set-key "\M-k" 'downcase-word)
 (global-set-key "\M-f" 'kill-sentence)
 (global-set-key "\M-g" 'goto-line)
-
-;; GLOBAL DEFUNS
-(defun stefan-insert-LaTeX-dollarsigns () ;; written 2013-04-02
-  "Insert dollarsigns in LaTeX for math content. Bound to F7."
-  (interactive)
-  (insert "$$")
-  (backward-char 1))
-(global-set-key [f7] 'stefan-insert-LaTeX-dollarsigns)
-
-(defun match-paren (arg)
-      "Go to the matching paren if on a paren; otherwise insert %."
-      (interactive "p")
-      (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
-            ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
-            (t (self-insert-command (or arg 1)))))
-
-(global-set-key [f6] 'match-paren)
-
-;; OTHERS
-(fset 'scrollbyone
-   "\C-j\C-u1\C-v")
-(global-set-key [f4] 'scrollbyone)
-
-; this key change makes scrolling in another window go line by line:
-(fset 'scroll-line-by-line
-   "\C-u1\C-[xscroll-other-window\C-m")
-(global-set-key "\C-\M-v" 'scroll-line-by-line)
-
-;; the recenter command so that there is more on the bottom than on the top
-(fset 'center-up
-   "\C-[xrecenter\C-m\C-[8\C-v")
-(global-set-key "\C-p" 'center-up)
-
-;; The macro germanize (C-x C-g) will save the buffer and
-
-;; germanize text above point
-(fset 'germanize
-   "\C-x\C-s\C-xrmthis\C-m\C-@\C-[<\C-[xiso german\C-m\C-xrbthis\C-m")
-
-;; (global-set-key "\C-x\C-g" 'germanize)
-
-;; make call-last-kbd-macro a one key command
-(global-set-key [f5] 'call-last-kbd-macro)
-(fset 'comment
-   [?\M-x ?c ?o ?m ?m ?e ?n ?t ?- ?r ?e ?g ?i ?o ?n return])
-(fset 'uncomment
-   [?\M-x ?u ?n ?c ?o ?m ?m ?e ?n ?t ?  ?r ?e ?g ?i ?o ?n return])
-(global-set-key [f9] 'comment)
-(global-set-key [f10] 'uncomment)
-
-;; STEFAN'S GENERAL SETTINGS
-;; various
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
-(put 'narrow-to-region 'disabled nil)
-(setq inhibit-startup-message t)
-;(set-foreground-color "dark orange")
-;(set-background-color "black")
-
-;; (require 'color-theme)
-;;     (color-theme-initialize)
-    ;; (color-theme-robin-hood)
-    ;; (color-theme-charcoal-black)
-    (load-file "/usr/share/emacs24/site-lisp/zenburn-theme.el")
-
-;; (require 'color-theme)
-;; (setq color-theme-is-global t)
-;; (color-theme-robin-hood)
-
-;; (set-cursor-color "dark orange")
-(fset 'yes-or-no-p 'y-or-n-p)
-(setq scroll-step 1)
-(setq sentence-end "[.?!][]\"')]*\\($\\|\t\\| \\)[ \t\n]*")
-(setq sentence-end-double-space nil)
-(mouse-avoidance-mode 'banish)
-;; (read-abbrev-file "~/.abbrev_defs")
-(setq-default abbrev-mode t)
-(setq save-abbrevs t)
 
 ;; Text-based modes (including mail, TeX, and LaTeX modes) are auto-filled.
 ;; this conflicts with visual-line-mode
@@ -256,6 +180,8 @@
                     (ding)
                     (y-or-n-p "Really quit? ")))))
 
+;; (4) my functions
+
 ;; STEFAN'S DEFUNS (vilog)
 
 ;; I threw some of my old defuns into the pit at the end of the emacs
@@ -272,6 +198,46 @@
 ;; there is an unnecessary step here; (= g 1) is for the case used most often (no p necessary), but that should be assigned to F5 and can be more complicated
 ;; This macro makes F9 comment a region and F10 uncomment it
 
+(defun stefan-insert-LaTeX-dollarsigns () ;; written 2013-04-02
+  "Insert dollarsigns in LaTeX for math content. Bound to F7."
+  (interactive)
+  (insert "$$")
+  (backward-char 1))
+(global-set-key [f7] 'stefan-insert-LaTeX-dollarsigns)
+
+(defun match-paren (arg)
+      "Go to the matching paren if on a paren; otherwise insert %."
+      (interactive "p")
+      (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
+            ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
+            (t (self-insert-command (or arg 1)))))
+
+(fset 'scrollbyone
+   "\C-j\C-u1\C-v")
+
+; this key change makes scrolling in another window go line by line:
+(fset 'scroll-line-by-line
+   "\C-u1\C-[xscroll-other-window\C-m")
+(global-set-key "\C-\M-v" 'scroll-line-by-line)
+
+;; the recenter command so that there is more on the bottom than on the top
+(fset 'center-up
+   "\C-[xrecenter\C-m\C-[8\C-v")
+(global-set-key "\C-p" 'center-up)
+
+;; make call-last-kbd-macro a one key command
+(fset 'comment
+   [?\M-x ?c ?o ?m ?m ?e ?n ?t ?- ?r ?e ?g ?i ?o ?n return])
+(fset 'uncomment
+   [?\M-x ?u ?n ?c ?o ?m ?m ?e ?n ?t ?  ?r ?e ?g ?i ?o ?n return])
+
+;; insert an equation in LaTeX
+(fset 'inseq
+   [?\C-c ?\C-e ?e ?q ?u ?a ?t ?i ?o ?n return f4 return ?\C-x ?r ?m ?y ?y ?t ?t return ?\C-a ?\C-j ?\C-j ?\C-o ?\C-k ?\C-k ?\C-x ?r ?b ?y ?y ?t ?t return])
+
+(fset 'degree
+   "^{\\circ}")
+
 (defun stefan-beamer-insert-figure (figname scale) ;; written 2017-03-19
   "Enter the name of the figure, and emacs will do the rest."
   (interactive "sEnter the tag name of the figure (dot png assumed): \nsEnter the scaling factor (default is 0.5): \n")
@@ -286,8 +252,6 @@
 (insert "\\end{figure}")
 (newline-and-indent)
 )
-
-(key-chord-define-global "bf" 'stefan-beamer-insert-figure)
 
 (fset 'leri
    "\\left(\\right)\C-h\C-h\C-h\C-h\C-h\C-h\C-h")
@@ -328,13 +292,8 @@
 (delete-char 1)
 )
 
-(global-set-key [f4] 'stefan-insert-pwgen)
-
 (fset 'ref
    "(\\ref{})\C-h\C-h")
-
-(fset 'dkl
-   [?D ?_ ?\{ ?\\ ?m ?b ?o ?x ?\{ ?\\ ?t ?i ?n ?y ?  ?K ?L ?\} ?\} ?\( ?, ?\) ?\C-h ?\C-h])
 
 (defun stefan-docbook-title (s) ;; written 2013-11-11
   "Entering a title line."
@@ -525,7 +484,6 @@
 (forward-paragraph)
 (next-line)
 (open-line 2))
-(global-set-key [f2] 'stefan-mutt-reply)
 
 (defun stefan-reclaim-keybindings () ;; written 2010-03-09
   "Sometimes a major-mode will override these keybindings (C-j in auctex, C-j and C-k in org-mode). Use this fundction to reclaim these particular keybindings."
@@ -533,7 +491,6 @@
 (local-unset-key "\C-j")
 (local-unset-key "\C-k")
 (local-unset-key "\M-h"))
-(global-set-key [f3] 'stefan-reclaim-keybindings)
 
 (defun stefan-next-parened-number () ;; written 2010-01-22
   "Advance to the next point in a (n) numbered list."
@@ -733,7 +690,153 @@
                      nameOfFile))))
 )
 
-;; END STEFAN'S DEFUNS ;;
+;; EVERYTHING HAVING TO DO WITH COLOUR ;;
+
+(add-to-list 'load-path "/usr/share/emacs24/site-lisp/emacs-goodies-el/color-theme.el")
+(require 'color-theme)
+(eval-after-load "color-theme"
+  '(progn
+     (color-theme-initialize)
+     (color-theme-hober)))
+
+;(set-foreground-color "dark orange")
+;(set-background-color "black")
+;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/color-theme-6.6.0")
+
+;; (load-file "/usr/share/emacs24/site-lisp/zenburn-theme.el")
+
+(defun stefan-random-theme () ;; written 2017-04-02
+  "Pick a random colour theme."
+  (interactive)
+  (let* ((color-schemes '(
+"color-theme-aalto-dark"
+"color-theme-aalto-light"
+"color-theme-aliceblue"
+"color-theme-analyze-defun"
+"color-theme-andreas"
+"color-theme-arjen"
+"color-theme-bharadwaj"
+"color-theme-bharadwaj-slate"
+"color-theme-billw"
+"color-theme-black-on-gray"
+"color-theme-blippblopp"
+"color-theme-blue-eshell"
+"color-theme-blue-gnus"
+"color-theme-blue-mood"
+"color-theme-blue-sea"
+"color-theme-calm-forest"
+"color-theme-charcoal-black"
+"color-theme-clarity"
+"color-theme-classic"
+"color-theme-comidia"
+"color-theme-compare"
+"color-theme-dark-blue"
+"color-theme-dark-blue2"
+"color-theme-dark-erc"
+"color-theme-dark-font-lock"
+"color-theme-dark-gnus"
+"color-theme-dark-green"
+"color-theme-dark-info"
+"color-theme-dark-laptop"
+"color-theme-deep-blue"
+"color-theme-digital-ofs1"
+"color-theme-emacs-21"
+"color-theme-emacs-nw"
+"color-theme-euphoria"
+"color-theme-feng-shui"
+"color-theme-fischmeister"
+"color-theme-gnome"
+"color-theme-gnome2"
+"color-theme-goldenrod"
+"color-theme-gray1"
+"color-theme-gray30"
+"color-theme-greiner"
+"color-theme-gtk-ide"
+"color-theme-high-contrast"
+"color-theme-hober"
+"color-theme-jb-simple"
+"color-theme-jedit-grey"
+"color-theme-jonadabian"
+"color-theme-jonadabian-slate"
+"color-theme-jsc-dark"
+"color-theme-jsc-light"
+"color-theme-jsc-light2"
+"color-theme-katester"
+"color-theme-kingsajz"
+"color-theme-late-night"
+"color-theme-lawrence"
+"color-theme-ld-dark"
+"color-theme-lethe"
+"color-theme-marine"
+"color-theme-marquardt"
+"color-theme-matrix"
+"color-theme-midnight"
+"color-theme-mistyday"
+"color-theme-montz"
+"color-theme-oswald"
+"color-theme-parus"
+"color-theme-pierson"
+"color-theme-pok-wob"
+"color-theme-pok-wog"
+"color-theme-ramangalahy"
+"color-theme-raspopovic"
+"color-theme-renegade"
+"color-theme-resolve"
+"color-theme-retro-green"
+"color-theme-retro-orange"
+"color-theme-robin-hood"
+"color-theme-rotor"
+"color-theme-ryerson"
+"color-theme-salmon-font-lock"
+"color-theme-scintilla"
+"color-theme-shaman"
+"color-theme-simple-1"
+"color-theme-sitaramv-nt"
+"color-theme-sitaramv-solaris"
+"color-theme-snow"
+"color-theme-snowish"
+"color-theme-standard"
+"color-theme-subtle-blue"
+"color-theme-subtle-hacker"
+"color-theme-taming-mr-arneson"
+"color-theme-taylor"
+"color-theme-tty-dark"
+"color-theme-vim-colors"
+"color-theme-whateveryouwant"
+"color-theme-wheat"
+"color-theme-word-perfect"
+"color-theme-xemacs"
+"color-theme-xp"))
+	         (random-number (random (length color-schemes)))
+         (random-colour-scheme
+          (nth random-number color-schemes)))
+    (funcall (intern random-colour-scheme))
+  (message (nth random-number color-schemes))))
+
+;; (5) my macros
+
+;; do not write macros for f7 and f8 - they are reserved for on-the-fly macros
+;; (global-set-key [f7] 't1)
+;; (global-set-key [f8] 't2)
+(global-set-key [f2] 'stefan-mutt-reply)
+(global-set-key [f3] 'stefan-reclaim-keybindings)
+;; (global-set-key [f4] 'scrollbyone)
+(global-set-key [f4] 'stefan-insert-pwgen)
+(global-set-key [f5] 'call-last-kbd-macro)
+(global-set-key [f6] 'match-paren)
+(global-set-key [f9] 'comment)
+(global-set-key [f10] 'uncomment)
+(global-set-key [f11] 'stefan-random-theme)
+(key-chord-define-global "qw" 'inseq)
+(key-chord-define-global "dg" 'degree)
+(key-chord-define-global "bf" 'stefan-beamer-insert-figure)
+(key-chord-define-global "jk" 'dabbrev-expand)
+;; (key-chord-define-global "qw" 'stefan-insert-double-quotes)
+;; (key-chord-define-global "sd" 'stefan-increase-by-one-zero-padded)
+;; (key-chord-define-global "sf" 'isearch-forward-regexp)
+;; (key-chord-define-global "yu" 'stefan-yank-repeatedly)
+
+;; (6) other/old
 
 ;; Below are changes taken from the tutor .emacs file
 ;; Added by Craig Ruefenacht
@@ -1003,3 +1106,11 @@ menu, add it to the menu bar."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+;; The macro germanize (C-x C-g) will save the buffer and
+;; germanize text above point
+;; (fset 'germanize
+;;    "\C-x\C-s\C-xrmthis\C-m\C-@\C-[<\C-[xiso german\C-m\C-xrbthis\C-m")
+
+;; (global-set-key "\C-x\C-g" 'germanize)
+
