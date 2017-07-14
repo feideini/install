@@ -37,6 +37,7 @@ system "cp -v ./install/emacs.init /home/$homename/.emacs";
 
 # applying xmodmap
 print "INFO: Applying xmodmap ...\n";
+system "cp -v /home/$homename/install/.Xmodmap /home/$homename/";
 system "xmodmap /home/$homename/.Xmodmap";
 
 # fixing guake prefs

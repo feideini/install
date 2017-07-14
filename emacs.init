@@ -9,6 +9,7 @@
 ;; (1) to be customized for new installations
 
 (setq default-directory "/media/stefan/134578d5-ab2b-42d7-acee-ef4be0a6852c/git-online/hypo-unenc/")
+;; (setq default-directory "/media/pi/134578d5-ab2b-42d7-acee-ef4be0a6852c/git-online/hypo-unenc/")
 
 ;; (2) various programs
 
@@ -44,9 +45,9 @@
 (require 'php-mode)
 
 ;; AUCTEX
-(load "auctex.el" nil t t)
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
+;; (load "auctex.el" nil t t)
+;; (setq TeX-auto-save t)
+;; (setq TeX-parse-self t)
 
 ;; CSV-MODE
 ;; for centaur csv mode download el file at http://www.emacswiki.org/emacs/download/csv-mode.el
@@ -66,7 +67,7 @@
                 (font-lock-mode 1))))
 
 ;; GRAPHVIZ
-(load-file "/usr/share/emacs24/site-lisp/graphviz-dot-mode.el")
+;; (load-file "/usr/share/emacs24/site-lisp/graphviz-dot-mode.el")
 
 ;; ASYMPTOTE
 (autoload 'asy-mode "asy-mode.el" "Asymptote major mode." t)

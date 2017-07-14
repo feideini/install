@@ -1,3 +1,19 @@
+# COMMENTS 2017-04-14 All is well -- the setup is a bit weird, with having to be in the home directory and having to have the install dir git'd.
+# Here are some issues:
+
+# (1) xmodmap procedure is NOT working. I tried fixing this by adding
+
+# system "cp -v /home/$homename/install/.Xmodmap /home/$homename/";
+
+# to install-local-pre.pl --> check it next time
+
+# (2) bin.tar.gz is currently in ./computer/gemischtes --> it needs to be integrated here; also delete ./computer/bin
+# I have the command
+
+#     system "git clone https://github.com/feideini/bin.git";
+
+# in install-local-pre.pl, but apparently that's not working out --> check it next time
+
 # COMMENTS 2017-01-16 I hope I have taken care of most of these concerns.
 # The greatest leap forward is the establishment of 
 # https://github.com/feideini/install.git
@@ -32,9 +48,17 @@ $emacs="/usr/share/emacs24/site-lisp";
 # $emacs="/usr/share/emacs/site-lisp";
 print "Emacs installation directory is $emacs\n";
 
-print "Do you want to install LaTeX? (y/n) ";
+print "Do you want to install LaTeX (default no, type yes)? ";
 $latexq = <STDIN>;
 chomp($latexq);
+if ($latexq eq "yes")
+{
+  $latexq="y";
+}
+else
+{
+  $latexq="n";
+}
 
 print "First, we'll get installing postfix out of the way because it will prompt you.\n";
 print "INFO: Installing postfix for abcde ...\n";
@@ -60,6 +84,10 @@ print "INFO: Installing gvim ...\n";
 system "apt-get --assume-yes install vim-gtk";
     
 # programs to install added later
+print "INFO: Installing xsel ...\n";
+system "apt-get --assume-yes install xsel";
+print "INFO: Installing emacs-goodies-el ...\n";
+system "apt-get --assume-yes install emacs-goodies-el";
 print "INFO: Installing gimp ...\n";
 system "apt-get --assume-yes install gimp";
 print "INFO: Installing graphviz ...\n";
@@ -90,8 +118,6 @@ print "INFO: Installing gpodder ...\n";
 system "apt-get --assume-yes install gpodder";
 print "INFO: Installing gftp ...\n";
 system "apt-get --assume-yes install gftp";
-print "INFO: Installing auctex ...\n";
-system "apt-get --assume-yes install auctex";
 
 # installing LaTeX
 if ($latexq eq "y")
@@ -102,6 +128,8 @@ print "INFO: Installing texlive ...\n";
 system "apt-get --assume-yes install texlive";
 print "INFO: Installing untex ...\n";
 system "apt-get --assume-yes install untex";
+print "INFO: Installing auctex ...\n";
+system "apt-get --assume-yes install auctex";
    }
 
 # original programs to install

@@ -60,15 +60,23 @@ print "INFO: Installing gvim ...\n";
 system "apt-get --assume-yes install vim-gtk";
     
 # programs to install added later
-print "INFO: Installing kdiff3 for abcde ...\n";
+print "INFO: Installing emacs-goodies-el ...\n";
+system "apt-get --assume-yes install emacs-goodies-el";
+print "INFO: Installing gimp ...\n";
+system "apt-get --assume-yes install gimp";
+print "INFO: Installing graphviz ...\n";
+system "apt-get --assume-yes install gparted";
+print "INFO: Installing graphviz ...\n";
+system "apt-get --assume-yes install graphviz";
+print "INFO: Installing kdiff3 ...\n";
 system "apt-get --assume-yes install kdiff3";
-print "INFO: Installing xsel for abcde ...\n";
+print "INFO: Installing xsel ...\n";
 system "apt-get --assume-yes install xsel";
-print "INFO: Installing shutter for abcde ...\n";
+print "INFO: Installing shutter ...\n";
 system "apt-get --assume-yes install shutter";
-print "INFO: Installing terminator for abcde ...\n";
+print "INFO: Installing terminator ...\n";
 system "apt-get --assume-yes install terminator";
-print "INFO: Installing eyed3 for abcde ...\n";
+print "INFO: Installing eyed3 ...\n";
 system "apt-get --assume-yes install eyed3";
 print "INFO: Installing gthumb ...\n";
 system "apt-get --assume-yes install gthumb";
@@ -84,8 +92,6 @@ print "INFO: Installing gpodder ...\n";
 system "apt-get --assume-yes install gpodder";
 print "INFO: Installing gftp ...\n";
 system "apt-get --assume-yes install gftp";
-print "INFO: Installing auctex ...\n";
-system "apt-get --assume-yes install auctex";
 
 # installing LaTeX
 if ($latexq eq "y")
@@ -96,6 +102,8 @@ print "INFO: Installing texlive ...\n";
 system "apt-get --assume-yes install texlive";
 print "INFO: Installing untex ...\n";
 system "apt-get --assume-yes install untex";
+print "INFO: Installing auctex ...\n";
+system "apt-get --assume-yes install auctex";
    }
 
 # original programs to install
@@ -188,6 +196,9 @@ system "apt-get --assume-yes install xournal";
 # print "TODO: run make -C /home/$homename/ProgramFiles/Statistics-R-0.33 test\n";
 
 # installing emacs modules
+system "cp -v ./install/graphviz-dot-mode.el $emacs";
+system "chmod 644 $emacs/asy-mode.el";
+
 system "cp -v ./install/asy-mode.el $emacs";
 system "chmod 644 $emacs/asy-mode.el";
 
