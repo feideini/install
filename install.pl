@@ -1,3 +1,15 @@
+# COMMENTS 2017-01-16 I hope I have taken care of most of these concerns.
+# The greatest leap forward is the establishment of 
+# https://github.com/feideini/install.git
+
+# COMMENTS 2016-06-14 It is not clear how to run these two files. I
+# think the idea is to run install.pl first to install guake, then to
+# interrupt it and run install-local.pl, and then to run install.pl
+# again as root. Fix that. Next, there are still some directories
+# assumed in the install procedure that may vary on different
+# computers. Define them as variables (especially, guake preferences
+# file). --> things didn't go well with auctex and zenburn, either.
+
 # COMMENTS 2017-04-14 All is well -- the setup is a bit weird, with having to be in the home directory and having to have the install dir git'd.
 # Here are some issues:
 
@@ -13,18 +25,6 @@
 #     system "git clone https://github.com/feideini/bin.git";
 
 # in install-local-pre.pl, but apparently that's not working out --> check it next time
-
-# COMMENTS 2017-01-16 I hope I have taken care of most of these concerns.
-# The greatest leap forward is the establishment of 
-# https://github.com/feideini/install.git
-
-# COMMENTS 2016-06-14 It is not clear how to run these two files. I
-# think the idea is to run install.pl first to install guake, then to
-# interrupt it and run install-local.pl, and then to run install.pl
-# again as root. Fix that. Next, there are still some directories
-# assumed in the install procedure that may vary on different
-# computers. Define them as variables (especially, guake preferences
-# file). --> things didn't go well with auctex and zenburn, either.
 
 print "I am assuming you have git clone'd install and moved install.pl to the home folder.\n";
 print "I want you to be in your home directory. If you are not, abort. Confirm by pressing ENTER. ";
@@ -44,9 +44,9 @@ else
 {
     print "Home name is $homename\n";
 }
-$emacs="/usr/share/emacs24/site-lisp";
-# $emacs="/usr/share/emacs/site-lisp";
-print "Emacs installation directory is $emacs\n";
+print "Emacs installation directory? (Something like /usr/share/emacs24/site-lisp ...) ";
+$emacs=<STDIN>;
+chomp($emacs);
 
 print "Do you want to install LaTeX (default no, type yes)? ";
 $latexq = <STDIN>;
@@ -90,7 +90,7 @@ print "INFO: Installing emacs-goodies-el ...\n";
 system "apt-get --assume-yes install emacs-goodies-el";
 print "INFO: Installing gimp ...\n";
 system "apt-get --assume-yes install gimp";
-print "INFO: Installing graphviz ...\n";
+print "INFO: Installing gparted ...\n";
 system "apt-get --assume-yes install gparted";
 print "INFO: Installing graphviz ...\n";
 system "apt-get --assume-yes install graphviz";
@@ -223,7 +223,7 @@ system "apt-get --assume-yes install xournal";
 
 # installing emacs modules
 system "cp -v ./install/graphviz-dot-mode.el $emacs";
-system "chmod 644 $emacs/asy-mode.el";
+system "chmod 644 $emacs/graphviz-dot-mode.el";
 
 system "cp -v ./install/asy-mode.el $emacs";
 system "chmod 644 $emacs/asy-mode.el";
@@ -237,58 +237,60 @@ system "chmod 644 $emacs/key-chord.el";
 system "cp -v ./install/php-mode.el $emacs";
 system "chmod 644 $emacs/php-mode.el";
 
-system "cp -v ./install/zenburn-theme.el $emacs";
-system "chmod 644 $emacs/zenburn-theme.el";
+# system "cp -v ./install/zenburn-theme.el $emacs";
+# system "chmod 644 $emacs/zenburn-theme.el";
 
+## This isn't really working, so it's commented out
 # Copying items to Desktop
-system "cp -v /usr/share/applications/Emacs.desktop /home/$homename/Desktop/";
-system "chown $homename:$homename /home/$homename/Desktop/Emacs.desktop";
-system "chmod 755 /home/$homename/Desktop/Emacs.desktop";
+# system "cp -v /usr/share/applications/Emacs.desktop /home/$homename/Desktop/";
+# system "chown $homename:$homename /home/$homename/Desktop/Emacs.desktop";
+# system "chmod 755 /home/$homename/Desktop/Emacs.desktop";
 
-system "cp -v /usr/share/applications/Firefox.desktop /home/$homename/Desktop/";
-system "chown $homename:$homename /home/$homename/Desktop/Firefox.desktop";
-system "chmod 755 /home/$homename/Desktop/Firefox.desktop";
+# system "cp -v /usr/share/applications/Firefox.desktop /home/$homename/Desktop/";
+# system "chown $homename:$homename /home/$homename/Desktop/Firefox.desktop";
+# system "chmod 755 /home/$homename/Desktop/Firefox.desktop";
 
-system "cp -v /usr/share/applications/gftp.desktop /home/$homename/Desktop/";
-system "chown $homename:$homename /home/$homename/Desktop/gftp.desktop";
-system "chmod 755 /home/$homename/Desktop/gftp.desktop";
+# system "cp -v /usr/share/applications/gftp.desktop /home/$homename/Desktop/";
+# system "chown $homename:$homename /home/$homename/Desktop/gftp.desktop";
+# system "chmod 755 /home/$homename/Desktop/gftp.desktop";
 
-system "cp -v /usr/share/applications/gpodder.desktop /home/$homename/Desktop/";
-system "chown $homename:$homename /home/$homename/Desktop/gpodder.desktop";
-system "chmod 755 /home/$homename/Desktop/gpodder.desktop";
+# system "cp -v /usr/share/applications/gpodder.desktop /home/$homename/Desktop/";
+# system "chown $homename:$homename /home/$homename/Desktop/gpodder.desktop";
+# system "chmod 755 /home/$homename/Desktop/gpodder.desktop";
 
-system "cp -v /usr/share/applications/gthumb.desktop /home/$homename/Desktop/";
-system "chown $homename:$homename /home/$homename/Desktop/gthumb.desktop";
-system "chmod 755 /home/$homename/Desktop/gthumb.desktop";
+# system "cp -v /usr/share/applications/gthumb.desktop /home/$homename/Desktop/";
+# system "chown $homename:$homename /home/$homename/Desktop/gthumb.desktop";
+# system "chmod 755 /home/$homename/Desktop/gthumb.desktop";
 
-system "cp -v /usr/share/applications/gvim.desktop /home/$homename/Desktop/";
-system "chown $homename:$homename /home/$homename/Desktop/gvim.desktop";
-system "chmod 755 /home/$homename/Desktop/gvim.desktop";
+# system "cp -v /usr/share/applications/gvim.desktop /home/$homename/Desktop/";
+# system "chown $homename:$homename /home/$homename/Desktop/gvim.desktop";
+# system "chmod 755 /home/$homename/Desktop/gvim.desktop";
 
-system "cp -v /usr/share/applications/nautilus.desktop /home/$homename/Desktop/";
-system "chown $homename:$homename /home/$homename/Desktop/nautilus.desktop";
-system "chmod 755 /home/$homename/Desktop/nautilus.desktop";
+# system "cp -v /usr/share/applications/nautilus.desktop /home/$homename/Desktop/";
+# system "chown $homename:$homename /home/$homename/Desktop/nautilus.desktop";
+# system "chmod 755 /home/$homename/Desktop/nautilus.desktop";
 
-system "cp -v /usr/share/applications/shutter.desktop /home/$homename/Desktop/";
-system "chown $homename:$homename /home/$homename/Desktop/shutter.desktop";
-system "chmod 755 /home/$homename/Desktop/shutter.desktop";
+# system "cp -v /usr/share/applications/shutter.desktop /home/$homename/Desktop/";
+# system "chown $homename:$homename /home/$homename/Desktop/shutter.desktop";
+# system "chmod 755 /home/$homename/Desktop/shutter.desktop";
 
-system "cp -v /usr/share/applications/terminator.desktop /home/$homename/Desktop/";
-system "chown $homename:$homename /home/$homename/Desktop/terminator.desktop";
-system "chmod 755 /home/$homename/Desktop/terminator.desktop";
+# system "cp -v /usr/share/applications/terminator.desktop /home/$homename/Desktop/";
+# system "chown $homename:$homename /home/$homename/Desktop/terminator.desktop";
+# system "chmod 755 /home/$homename/Desktop/terminator.desktop";
 
-system "cp -v /usr/share/applications/xournal.desktop /home/$homename/Desktop/";
-system "chown $homename:$homename /home/$homename/Desktop/xournal.desktop";
-system "chmod 755 /home/$homename/Desktop/xournal.desktop";
+# system "cp -v /usr/share/applications/xournal.desktop /home/$homename/Desktop/";
+# system "chown $homename:$homename /home/$homename/Desktop/xournal.desktop";
+# system "chmod 755 /home/$homename/Desktop/xournal.desktop";
 
-system "cp -v /usr/share/applications/www.octave.org-octave.desktop /home/$homename/Desktop/";
-system "chown $homename:$homename /home/$homename/Desktop/www.octave.org-octave.desktop";
-system "chmod 755 /home/$homename/Desktop/www.octave.org-octave.desktop";
+# system "cp -v /usr/share/applications/www.octave.org-octave.desktop /home/$homename/Desktop/";
+# system "chown $homename:$homename /home/$homename/Desktop/www.octave.org-octave.desktop";
+# system "chmod 755 /home/$homename/Desktop/www.octave.org-octave.desktop";
 
 # installing vim modules
-print "TODO: You must run :PluginInstall in gvim manually (start gvim by pressing Alt-F2 and\n";
-print "TODO: typing gvim -- the colour scheme error will be taken care of by vundle).\n";
+# print "TODO: You must run :PluginInstall in gvim manually (start gvim by pressing Alt-F2 and\n";
+# print "TODO: typing gvim -- the colour scheme error will be taken care of by vundle).\n";
 # system "export PATH=$PATH:/home/$homename/bin";
-print "TODO: You must also run export PATH=\$PATH:/home/$homename/bin manually.";
-print "TODO: Now run install-local-post.pl.\n";
+# print "TODO: You must also run export PATH=\$PATH:/home/$homename/bin manually.";
+# print "TODO: Now run install-local-post.pl.\n";
+print "\n\nMake sure to follow all instructions in readme.txt.\n";
 
